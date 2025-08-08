@@ -1,12 +1,43 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ComponentRef, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { MicroFrontendService } from './micro-frontend.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'host';
+export class AppComponent implements OnInit, OnDestroy {
+
+  @ViewChild('list', {read: ViewContainerRef, static: true}) listContainer!: ViewContainerRef;
+  @ViewChild('information', {read: ViewContainerRef, static: true}) availabilityContainer!: ViewContainerRef;
+
+  private listComponentRef: ComponentRef<any> | null = null;
+  private availabilityComponentRef: ComponentRef<any> | null = null;
+
+  constructor(private microfrontendService: MicroFrontendService) {}
+
+  async ngOnInit() {
+    try {
+      const listModule = await this.microfrontendService.loadRemoteComponent(4201, 'list');
+      this.listContainer.clear();
+      this.listComponentRef = this.listContainer.createComponent(listModule.AppComponent);
+      this.listComponentRef.changeDetectorRef.detectChanges();
+
+      const availabilityModule = await this.microfrontendService.loadRemoteComponent(4202, 'information');
+      this.availabilityContainer.clear();
+      this.availabilityComponentRef = this.availabilityContainer.createComponent(availabilityModule.AppComponent);
+      this.availabilityComponentRef.changeDetectorRef.detectChanges();
+    } catch (err) {
+      console.error("Failed to load remote component", err);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.listComponentRef) {
+      this.listComponentRef.destroy();
+    }
+    if (this.availabilityComponentRef) {
+      this.availabilityComponentRef.destroy();
+    }
+  }
 }

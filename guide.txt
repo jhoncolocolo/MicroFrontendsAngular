@@ -1,0 +1,23 @@
+https://www.youtube.com/watch?v=ZlJ__9bYHxs
+
+Show in minute 3:44 First Step npm i @angular-architects/native-federation
+
+In minute 4:30 ubicated in main project host exec this command
+ng g @angular-architects/native-federation:init --project host --port 4200 --type dynamic-host
+
+In minute 4:50 the second one:
+for project list would be
+ng g @angular-architects/native-federation:init --project list --port 4201 --type remote
+
+In minute 5:05 the third one:
+for project list would be
+ng g @angular-architects/native-federation:init --project information --port 4202 --type remote
+
+05:15 it will be show how exposes Component when this microservices give the name of microservices
+05:27 how call since host microfrontend the others microfrontends
+05:40 How make reference since host the childs of anothers microfrontends
+06:25 Creation services in host in order to accept another microfrontends in host microfrontend
+07:44 Inject service in main host Component
+08:20 How call first second microfrontend
+09:15 how reference federation.manifest in order to indicate all anothers microfrontends
+09:36 start projects micro list ng serve --port 4201 ng s for host micro
